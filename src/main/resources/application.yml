@@ -1,0 +1,66 @@
+server:
+    port: ${SERVER_PORT}
+    error:
+      whitelabel:
+        enabled: false
+    servlet:
+      encoding:
+        charset: UTF-8
+        enabled: true
+        force: true
+
+logging:
+  pattern:
+    console: "%d{yyyy/MM/dd HH:mm:ss} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg %n"
+
+spring:
+  application:
+    name: PurchaseServer
+
+  datasource:
+    url: ${DB_URL}
+    table: ${DB_TABLE}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER_CLASS}
+
+safety:
+  token: ${SAFETY_TOKEN}
+
+allowed:
+  origins: ${ALLOWED_ORIGIN}
+
+google:
+  test_mode: ${GOOGLE_TEST_MODE}
+  recaptcha:
+    secret: ${GOOGLE_SECRETKEY}
+    test_secret: ${GOOGLE_TEST_SECRETKEY}
+
+funpoint:
+  merchantId: ${FUNPOINT_MERCHANT_ID}
+  hashKey: ${FUNPOINT_HASH_KEY}
+  hashIV: ${FUNPOINT_HASH_IV}
+  url: ${FUNPOINT_URL}
+  fallback: ${FUNPOINT_FALLBACK}
+  description: ${FUNPOINT_DESCRIPTION}
+  test:
+    mode: ${FUNPOINT_TEST_MODE}
+    url: ${FUNPOINT_TEST_URL}
+    merchantId: ${TEST_FUNPOINT_MERCHANT_ID}
+    hashKey: ${TEST_FUNPOINT_HASH_KEY}
+    hashIV: ${TEST_FUNPOINT_HASH_IV}
+
+smse:
+  dcvc: ${SMSE_DCVC}
+  rvg2c: ${SMSE_RVG2C}
+  verifyCode: ${SMSE_VERIFY_CODE}
+  url: ${SMSE_URL}
+  fallback: ${SMSE_FALLBACK}
+  test:
+    mode: ${SMSE_TEST_MODE}
+    url: ${SMSE_TEST_URL}
+
+discord:
+  webhook: ${DISCORD_WEBHOOK_URL}
+  username: ${DISCORD_WEBHOOK_USERNAME}
+  image: ${DISCORD_WEBHOOK_IMAGE_URL}
