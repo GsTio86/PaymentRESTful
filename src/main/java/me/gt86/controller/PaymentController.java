@@ -25,8 +25,7 @@ public class PaymentController {
     @PostMapping("/createOrder")
     public ResponseEntity<String> createOrder(@RequestBody Payment payment, HttpServletRequest request) {
         String remoteIp = request.getRemoteAddr();
-        String token = request.getParameter("g-recaptcha-response");
-        boolean isRecaptchaVerified = recaptchaServiceImpl.verifyRecaptcha(token, remoteIp);
+        boolean isRecaptchaVerified = recaptchaServiceImpl.verifyRecaptcha(payment.getToken(), remoteIp);
         if (!isRecaptchaVerified) {
             return ResponseEntity.badRequest().body("無效的機器人驗證!");
         }

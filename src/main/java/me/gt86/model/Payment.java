@@ -8,4 +8,5 @@ public class Payment {
     private String username;
     private String rawid;
     private Integer amount;
+    private String token;
 }
