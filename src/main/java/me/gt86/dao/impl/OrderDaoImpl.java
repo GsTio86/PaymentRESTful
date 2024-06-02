@@ -4,6 +4,8 @@ import me.gt86.dao.OrderDao;
 import me.gt86.model.Order;
 import me.gt86.service.impl.DiscordServiceImpl;
 import me.gt86.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,6 +26,8 @@ public class OrderDaoImpl implements OrderDao {
     @Value("${safety.token}")
     private String token;
 
+    private static final Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);
+
     @Override
     public boolean tryCreateOrder(Order order) {
         String uid = order.getUid();
@@ -37,11 +41,12 @@ public class OrderDaoImpl implements OrderDao {
         String ip = order.getIp();
         if (uuid != null && !uuid.isEmpty()) {
             String sql = "INSERT INTO " + table + " VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? )";
-            int affectedRows = jdbcTemplate.update(sql, uid, time, Utils.stringToUuid(uuid), type, money, server, payment, give, ip);
+            uuid = Utils.stringToUuid(uuid);
+            int affectedRows = jdbcTemplate.update(sql, uid, time, uuid, type, money, server, payment, give, ip);
             if (affectedRows > 0) {
-                String currentTime = Utils.getCurrentTime();
-                System.out.printf("[%s] New order added: %s%n", currentTime, uid);
-                String message = String.format("[%s] UUID: %s 付款方式:%s 金額: %d", uid, Utils.stringToUuid(uuid), Utils.paymentName[payment], money);
+                String paymentName = Utils.paymentName[type];
+                logger.info("資料庫新增新訂單: 編號 [{}] UUID [{}] 付款方式 [{}] 金額 [${}]", uid, uuid, paymentName, money);
+                String message = String.format("[%s] UUID: %s 付款方式:%s 金額: %d", uid, uuid, paymentName, money);
                 discord.sendDiscordNotificationAsync(message);
                 return true;
             }
@@ -51,17 +56,15 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public boolean tryUpdateOrder(String tradeUID) {
-        String sql = "UPDATE orders SET payment = 1 WHERE uid = ?";
+        String sql = "UPDATE " + table + " SET payment = 1 WHERE uid = ?";
         int affectedRows = jdbcTemplate.update(sql, tradeUID);
         if (affectedRows > 0) {
-            String currentTime = Utils.getCurrentTime();
-            System.out.printf("[%s] Payment updated: %s%n", currentTime, tradeUID);
-
+            logger.info("資料庫更新訂單付款完成: 編號 [{}]", tradeUID);
             String message = String.format("[%s] 付款已完成!", tradeUID);
             discord.sendDiscordNotificationAsync(message);
             return true;
         } else {
-            System.out.printf("[%s] Payment not found: %s%n", Utils.getCurrentTime(), tradeUID);
+            logger.info("資料庫訂單不存在: 編號 [{}]", tradeUID);
         }
         return false;
     }
