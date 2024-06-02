@@ -1,13 +1,14 @@
 package me.gt86.dao.impl;
 
 import me.gt86.dao.RecaptchaDao;
-import me.gt86.model.CaptchaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class RecaptchaDaoImpl implements RecaptchaDao {
@@ -18,18 +19,39 @@ public class RecaptchaDaoImpl implements RecaptchaDao {
     @Value("${google.recaptcha.secret}")
     private String recaptchaSecret;
 
-    @Value("${google.recaptcha.test_secret}")
+    @Value("${google.test_secret}")
     private String recaptchaTestSecret;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s&remoteip=%s";
-
     @Override
     public boolean verifyRecaptcha(String recaptchaToken, String remoteIp) {
-        URI verifyUri = URI.create(String.format(RECAPTCHA_VERIFY_URL, testMode ? recaptchaTestSecret : recaptchaSecret, recaptchaToken, remoteIp));
-        CaptchaResponse response = restTemplate.getForObject(verifyUri, CaptchaResponse.class);
-        return response != null && response.isSuccess();
+        String url = "https://www.google.com/recaptcha/api/siteverify";
+
+        String secret = testMode ? recaptchaTestSecret : recaptchaSecret;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        Map<String, String> params = new HashMap<>();
+        params.put("secret", secret);
+        params.put("response", recaptchaToken);
+        params.put("remoteip", remoteIp);
+
+        StringBuilder requestBody = new StringBuilder();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (requestBody.length() > 0) {
+                requestBody.append("&");
+            }
+            requestBody.append(entry.getKey()).append("=").append(entry.getValue());
+        }
+
+        HttpEntity<String> entity = new HttpEntity<>(requestBody.toString(), headers);
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
+
+        Map<String, Object> body = response.getBody();
+
+        return body != null && (Boolean) body.get("success");
     }
 }
