@@ -1,8 +1,5 @@
 server:
     port: ${SERVER_PORT}
-    error:
-      whitelabel:
-        enabled: false
     servlet:
       encoding:
         charset: UTF-8
@@ -23,6 +20,9 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: ${DB_DRIVER_CLASS}
+    hikari:
+      maximum-pool-size: ${DB_MAXIMUM_POOL_SIZE}
+      idle-timeout: ${DB_IDLE_TIMEOUT}
 
 safety:
   token: ${SAFETY_TOKEN}
@@ -32,9 +32,9 @@ allowed:
 
 google:
   test_mode: ${GOOGLE_TEST_MODE}
+  test_secret: ${GOOGLE_TEST_SECRETKEY}
   recaptcha:
     secret: ${GOOGLE_SECRETKEY}
-    test_secret: ${GOOGLE_TEST_SECRETKEY}
 
 funpoint:
   merchantId: ${FUNPOINT_MERCHANT_ID}
