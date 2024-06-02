@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/fallback")
 public class FallbackController {
@@ -24,7 +26,8 @@ public class FallbackController {
     private SmseServiceImpl smi;
 
     @PostMapping("/payment_funpoint")
-    public ResponseEntity<String> funPonitSuccess(@RequestBody FunPointPayment request, @RequestHeader("referer") String referer) {
+    public ResponseEntity<String> funPonitSuccess(@RequestParam Map<String, String> params, @RequestHeader("referer") String referer) {
+        FunPointPayment request = new FunPointPayment(params);
         if (osi.checkToken(request.getCustomField1()) && request.getMerchantID().equals(fpi.getMerchantID())) {
             if (fpi.getReferer().contains(referer)) {
                 if (request.getCheckMacValue().length() == 64) {
@@ -44,12 +47,13 @@ public class FallbackController {
     }
 
     @PostMapping("/payment_smse")
-    public ResponseEntity<String> smseSuccess(@RequestBody SmsePayment request, @RequestHeader("referer") String referer) {
-        String dataId = request.getData_id();
-        String purchamt = request.getPurchamt();
-        String amount = request.getAmount();
-        String smseid = request.getSmseid();
-        String midSmilepay = request.getMid_smilepay();
+    public ResponseEntity<String> smseSuccess(@RequestParam Map<String, String> params, @RequestHeader("referer") String referer) {
+        SmsePayment smsePayment = new SmsePayment(params);
+        String dataId = smsePayment.getData_id();
+        String purchamt = smsePayment.getPurchamt();
+        String amount = smsePayment.getAmount();
+        String smseid = smsePayment.getSmseid();
+        String midSmilepay = smsePayment.getMid_smilepay();
         if (smi.getReferer().contains(referer)) {
             String calculatedCode = SmseUtils.calculateVerifyCode(smi.getVerifyCode(), amount, smseid);
             if (calculatedCode.equals(midSmilepay) && purchamt.equals(amount)) {
@@ -61,5 +65,4 @@ public class FallbackController {
         }
         return ResponseEntity.ok("<Roturlstatus>SmilePay_ERROR</Roturlstatus>");
     }
-
 }
