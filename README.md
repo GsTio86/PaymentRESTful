@@ -26,6 +26,7 @@ PaymentRESTful 是一個基於 Spring Boot 的專案，用於處理遊戲中的�
   - `username` (String) - 遊戲id
   - `rawid` (String) - 遊戲uuid(無-版)
   - `amount` (Integer) - 付款金額
+  - `token` (String) - 驗證碼金鑰
 - **描述**：此端點用於建立一個新的訂單，並回傳一個 HTML 頁面，該頁面會自動跳轉至金流付款頁面。
 
 ### 3. 金流付款完成回調
