@@ -50,6 +50,9 @@ public class FunPointDaoImpl implements PaymentDao {
     @Value("${funpoint.description}")
     private String description;
 
+    @Value("${safety.token}")
+    private String token;
+
     @Autowired
     private OrderServiceImpl osi;
 
@@ -108,7 +111,7 @@ public class FunPointDaoImpl implements PaymentDao {
         tradeInfo.put("ReturnURL", fallbackUrl);
         tradeInfo.put("TotalAmount", String.valueOf(payment.getAmount()));
         tradeInfo.put("TradeDesc", description);
-        tradeInfo.put("CustomField1", "TOKEN");
+        tradeInfo.put("CustomField1", token);
         tradeInfo.put("CustomField2", payment.getUsername());
         tradeInfo.put("CustomField3", payment.getRawid());
 
