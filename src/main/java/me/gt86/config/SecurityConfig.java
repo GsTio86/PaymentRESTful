@@ -18,6 +18,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
+                // 預設拒絕所有 GET 請求 如需本地測試請註解掉
                 .requestMatchers(HttpMethod.GET).denyAll()
                 .anyRequest().permitAll()
             );

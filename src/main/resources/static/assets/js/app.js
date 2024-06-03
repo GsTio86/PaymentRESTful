@@ -46,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return Swal.fire('驗證失敗!', '請完成 Google reCAPTCHA 驗證!', 'warning');
         }
 
-        // 检查玩家ID
+        // 檢查玩家遊戲ID
         checkPlayerID(username).then(playerData => {
-            // 如果检查通过，创建订单
+            // 如果檢查通過，創建訂單
             createOrder(playerData, amount, type, token);
         }).catch(error => {
-            // 处理错误
+            // 處理錯誤
             Swal.fire('錯誤!', error.message, 'error');
         });
     };
@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkPlayerID = (username) => {
         return new Promise((resolve, reject) => {
             $.ajax({
+                // http://127.0.0.1 可以改為你的後端IP或域名 注意 https 和 http
                 url: 'http://127.0.0.1/player/check',
                 type: 'POST',
                 contentType: 'application/json',
@@ -103,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         $.ajax({
+            // http://127.0.0.1 可以改為你的後端IP或域名 注意 https 和 http
             url: 'http://127.0.0.1/payment/createOrder',
             type: 'POST',
             contentType: 'application/json',
