@@ -1,7 +1,7 @@
 # PaymentRESTful
 
 ## 概述
-PaymentRESTful 是一個基於 Spring Boot 的專案，用於處理遊戲中的支付流程。該專案使用 Java 17 並集成了多個庫，包括 Lombok、spring-dotenv 和 Discord Webhook。前端驗證使用 Google reCAPTCHA。
+PaymentRESTful 是一個基於 Spring Boot 的專案，用於處理遊戲中的繳費流程。該專案使用 Java 17 並集成了多個庫，包括 Lombok、spring-dotenv 和 Discord Webhook。前端驗證使用 Google reCAPTCHA。
 
 ## 使用的技術與庫
 - **[Spring Boot](https://spring.io/projects/spring-boot)**：作為主要框架，用於構建 RESTful API。
