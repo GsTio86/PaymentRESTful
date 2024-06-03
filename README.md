@@ -47,4 +47,4 @@ PaymentRESTful 是一個基於 Spring Boot 的專案，用於處理遊戲中的�
 ## 設置與運行
 1. 克隆此倉庫到本地：
    ```sh
-   git clone https://github.com/GsTio86/PaymentRESTful.git```
+   git clone https://github.com/GsTio86/PaymentRESTful.git
