@@ -46,4 +46,4 @@ bin/
 
 ### Spring Boot ###
 build/
-src/main/resources/static/
+src/main/resources/web/

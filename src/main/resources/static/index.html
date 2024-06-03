@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="assets/image/favicon.png"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="title" content="付款表單">
+    <meta name="googlebot" content="noindex">
+    <meta name="robots" content="noindex">
+    <meta name="description" content="付款表單"/>
+    <title>付款表單</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+<header class="logo-container">
+    <picture>
+        <source srcset="assets/image/logo.webp" type="image/webp">
+        <img class="logo-image" src="assets/image/logo.webp" alt="伺服器">
+    </picture>
+</header>
+<div class="container">
+    <div class="content text-center">
+        <img class="player-image" id="player-image" style="display: none;">
+        <h5 id="title" class="mt-4">付款表單</h5>
+        <p id="subtitle">請按照步驟填寫資料！</p>
+        <div class="form-container">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="遊戲名稱" id="username">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">NTD</span>
+                <input type="number" value="100" class="form-control" placeholder="繳費金額" id="amount" step="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">付款方式</span>
+                <select class="form-select" id="payment" required>
+                    <option value="NONE" selected disabled>請選擇一項</option>
+                    <option value="IBON">7-11 ibon 代碼</option>
+                    <option value="ATM">ATM</option>
+                    <option value="CREDIT">信用卡</option>
+                </select>
+            </div>
+            <div class="recaptcha-container mb-3">
+                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" data-theme="light" data-size="normal" data-callback="verify" data-expired-callback="expired" data-error-callback="error"></div>
+            </div>
+            <button class="btn btn-primary submit-button">前往付款</button>
+        </div>
+    </div>
+</div>
+<footer class="text-center">
+    <p><b>© 表單範例 2023-<span id="currentYear"></span></b></p>
+</footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
