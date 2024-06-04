@@ -1,5 +1,6 @@
 package me.gt86.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import me.gt86.model.FunPointPayment;
 import me.gt86.model.SmsePayment;
 import me.gt86.service.impl.FunPointServiceImpl;
@@ -25,8 +26,12 @@ public class FallbackController {
     @Autowired
     private SmseServiceImpl smi;
 
+    @Autowired
+    private HttpServletRequest request;
+
     @PostMapping("/payment_funpoint")
-    public ResponseEntity<String> funPonitSuccess(@RequestParam Map<String, String> params, @RequestHeader("referer") String referer) {
+    public ResponseEntity<String> funPonitSuccess(@RequestParam Map<String, String> params) {
+        String referer = request.getHeader("referer");
         FunPointPayment request = new FunPointPayment(params);
         if (osi.checkToken(request.getCustomField1()) && request.getMerchantID().equals(fpi.getMerchantID())) {
             if (fpi.getReferer().contains(referer)) {
@@ -47,20 +52,18 @@ public class FallbackController {
     }
 
     @PostMapping("/payment_smse")
-    public ResponseEntity<String> smseSuccess(@RequestParam Map<String, String> params, @RequestHeader("referer") String referer) {
+    public ResponseEntity<String> smseSuccess(@RequestParam Map<String, String> params) {
         SmsePayment smsePayment = new SmsePayment(params);
         String dataId = smsePayment.getData_id();
         String purchamt = smsePayment.getPurchamt();
         String amount = smsePayment.getAmount();
         String smseid = smsePayment.getSmseid();
         String midSmilepay = smsePayment.getMid_smilepay();
-        if (smi.getReferer().contains(referer)) {
-            String calculatedCode = SmseUtils.calculateVerifyCode(smi.getVerifyCode(), amount, smseid);
-            if (calculatedCode.equals(midSmilepay) && purchamt.equals(amount)) {
-                boolean success = osi.tryUpdateOrder(dataId);
-                if (success) {
-                    return ResponseEntity.ok("<Roturlstatus>SmilePay_OK</Roturlstatus>");
-                }
+        String calculatedCode = SmseUtils.calculateVerifyCode(smi.getVerifyCode(), amount, smseid);
+        if (calculatedCode.equals(midSmilepay) && purchamt.equals(amount)) {
+            boolean success = osi.tryUpdateOrder(dataId);
+            if (success) {
+                return ResponseEntity.ok("<Roturlstatus>SmilePay_OK</Roturlstatus>");
             }
         }
         return ResponseEntity.ok("<Roturlstatus>SmilePay_ERROR</Roturlstatus>");
